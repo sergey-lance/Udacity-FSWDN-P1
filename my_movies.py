@@ -29,8 +29,8 @@ class Movie():
 
 	title = "No title"
 	trailer_youtube_url = "None"
-	poster_image = "default_poster.gif"
-	release_year = None
+	poster_image = "no_poster.png"
+	release_year = ""
 	category = ""
 	
 	def __init__(self, **entries):
@@ -67,13 +67,6 @@ movie_data = [
 		'category': 'R',
 	},
 	{
-		'title': "Forrest Gump",
-		'trailer_youtube_url': "http://www.youtube.com/watch?v=uPIEn0M8su0",
-		'poster_image': "https://www.movieposter.com/posters/archive/main/38/MPW-19355",
-		'release_year': "6 July 1994",
-		'category': 'PG-13',
-	},
-	{
 		'title': "Run Lola Run",
 		'trailer_youtube_url': "http://www.youtube.com/watch?v=3ea0mG4ahRk",
 		'poster_image': "https://www.movieposter.com/posters/archive/main/12/A70-6235",
@@ -81,10 +74,9 @@ movie_data = [
 		'category': 'R',
 	},
 	{
-		'title': "Léon: The Professional",
+		'title': "Leon: The Professional",
 		'trailer_youtube_url': "http://www.youtube.com/watch?v=DcsirofJrlM",
 		'poster_image': "https://www.movieposter.com/posters/archive/main/8/A70-4120",
-		'release_year': "1994",
 		'category': 'R',
 	},
 	{
@@ -92,7 +84,13 @@ movie_data = [
 		'trailer_youtube_url': "http://www.youtube.com/watch?v=6hB3S9bIaco",
 		'poster_image': "https://www.movieposter.com/posters/archive/main/42/MPW-21321",
 		'release_year': "1994",
-		'category': 'R',
+	},
+	{
+		'title': "Forrest Gump",
+		'trailer_youtube_url': "http://www.youtube.com/watch?v=uPIEn0M8su0",
+		'poster_image': "https://www.movieposter.com/posters/archive/main/38/MPW-19355",
+		'release_year': "6 July 1994",
+		'category': 'PG-13',
 	},
 ]
 
@@ -110,15 +108,16 @@ for idx, md in enumerate(movie_data):
 
 def generate_movies_page(movies):
 	''' Generate a movies webpage file.'''
-	tiles_html = '\n'.join( [m.html() for m in movies])
+	
 	with open(output_filename,'w') as output_file, \
 		 open('main.tpl', 'r') as template_file, \
 		 open('head.htm', 'r') as header_file:
-			 
+		
 		template = Template(template_file.read())
+		tiles_html = '\n'.join( [m.html() for m in movies])
 		head_html = header_file.read()
 		
-		content = template.substitute(movie_tiles=tiles_html, head=head_html)
+		content = template.substitute(movie_tiles=tiles_html, head=head_html)  #fill page template with contents
 		output_file.write(content)
 		
 		
@@ -128,6 +127,5 @@ def open_movies_page():
 	url = os.path.abspath(output_filename)
 	webbrowser.open('file://' + url, new=2) # open in a new tab, if possible
 
-#~ open_movies_page()	
-generate_movies_page(movies)	
+open_movies_page()	
 
