@@ -3,19 +3,15 @@ import webbrowser
 import os
 from string import Template
 
-movie_tile_template = '''
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="${trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
-    <img src="${poster_image_url}" width="220" height="342">
-    <h2>${movie_title}</h2>
-</div>
-'''
-
-
-# We are using urlparse instead of re to find out youtube id
+# We are using `urlparse` instead of `re` to find out youtube id.
 try:
 	import urlparse # python >2.6
 except ImportError:
-	from urllib.parse import urlparse #python >3.0	
+	import urllib.parse as urlparse #python >3.0	
+
+
+output_filename = 'movies.html'
+
 
 def get_youtube_id(url):
 	''' Parse youtube url (http://www.youtube.com/watch?v=ID) and return the ID'''
@@ -24,7 +20,7 @@ def get_youtube_id(url):
 		youtube_id = urlparse.parse_qs(query)['v'][0]
 	except KeyError:
 		youtube_id = None
-		
+
 	return youtube_id
 
 
@@ -32,17 +28,30 @@ class Movie():
 	''' A movie with default properties. '''
 
 	title = "No title"
-	trailer_youtube_url = "about:blank"
+	trailer_youtube_url = "None"
 	poster_image = "default_poster.gif"
+	release_year = None
+	category = ""
 	
 	def __init__(self, **entries):
 		self.__dict__.update(entries) # An elegant way to set the object variables
 		
 	def html(self):
+		''' Generate html code '''
+		movie_tile_template = """
+			<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="${trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
+				<img src="${poster_image_url}" width="220" height="342" class="movie-poster">
+				<h2>${movie_title} <span class="movie-category">${category}</span></h2>
+				<p><strong>${release_year}</strong></p>
+			</div>
+			"""
+		
 		placeholders = {
 			'trailer_youtube_id': get_youtube_id(self.trailer_youtube_url),
-			'movie_title':self.title,
+			'movie_title': self.title,
 			'poster_image_url': self.poster_image,
+			'release_year': self.release_year,
+			'category': self.category,
 			}
 		template = Template(movie_tile_template)
 		return template.safe_substitute(placeholders)
@@ -52,12 +61,22 @@ class Movie():
 movie_data = [
 	{
 		'title': "Zombies",
-		'trailer_url': "http://sdaff",
-		'poster_image': "poster1.gif",
 	},
 	{
 		'title': "Fight Club",
 		'trailer_youtube_url': "http://www.youtube.com/watch?v=J8FRBYOFu2w",
+		'poster_image': "https://www.movieposter.com/posters/archive/main/4/MPW-2244",
+		'release_year': " 15 October 1999",
+		'category': 'R',
+		
+	},
+	{
+		'title': "Forrest Gump",
+		'trailer_youtube_url': "http://www.youtube.com/watch?v=uPIEn0M8su0",
+		'poster_image': "https://www.movieposter.com/posters/archive/main/38/MPW-19355",
+		'release_year': "6 July 1994",
+		'category': 'PG-13',
+		
 	},
 ]
 
@@ -72,6 +91,27 @@ for idx, md in enumerate(movie_data):
 	except TypeError:
 		raise ValueError("Movie data item #%d is not a dictionary: %s given."	% (idx, type(md)) )
 	
-	
-for m in movies:
-	print(m.html())
+
+def generate_movies_page(movies):
+	''' Generate a movies webpage file.'''
+	tiles_html = '\n'.join( [m.html() for m in movies])
+	with open(output_filename,'w') as output_file, \
+		 open('main.tpl', 'r') as template_file, \
+		 open('head.htm', 'r') as header_file:
+			 
+		template = Template(template_file.read())
+		head_html = header_file.read()
+		
+		content = template.substitute(movie_tiles=tiles_html, head=head_html)
+		output_file.write(content)
+		
+		
+def open_movies_page():
+	''' Show a browser window with movies webpage.'''
+	generate_movies_page(movies)
+	url = os.path.abspath(output_filename)
+	webbrowser.open('file://' + url, new=2) # open in a new tab, if possible
+
+#~ open_movies_page()	
+generate_movies_page(movies)	
+
