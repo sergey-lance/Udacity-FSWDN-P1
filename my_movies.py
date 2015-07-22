@@ -60,15 +60,11 @@ class Movie():
 # A better way is to use json or yaml to store the data, but to simplify things we just create a list of python dictionaries.
 movie_data = [
 	{
-		'title': "Zombies",
-	},
-	{
 		'title': "Fight Club",
 		'trailer_youtube_url': "http://www.youtube.com/watch?v=J8FRBYOFu2w",
 		'poster_image': "https://www.movieposter.com/posters/archive/main/4/MPW-2244",
 		'release_year': " 15 October 1999",
 		'category': 'R',
-		
 	},
 	{
 		'title': "Forrest Gump",
@@ -76,7 +72,27 @@ movie_data = [
 		'poster_image': "https://www.movieposter.com/posters/archive/main/38/MPW-19355",
 		'release_year': "6 July 1994",
 		'category': 'PG-13',
-		
+	},
+	{
+		'title': "Run Lola Run",
+		'trailer_youtube_url': "http://www.youtube.com/watch?v=3ea0mG4ahRk",
+		'poster_image': "https://www.movieposter.com/posters/archive/main/12/A70-6235",
+		'release_year': "1998",
+		'category': 'R',
+	},
+	{
+		'title': "Léon: The Professional",
+		'trailer_youtube_url': "http://www.youtube.com/watch?v=DcsirofJrlM",
+		'poster_image': "https://www.movieposter.com/posters/archive/main/8/A70-4120",
+		'release_year': "1994",
+		'category': 'R',
+	},
+	{
+		'title': "The Shawshank Redemption",
+		'trailer_youtube_url': "http://www.youtube.com/watch?v=6hB3S9bIaco",
+		'poster_image': "https://www.movieposter.com/posters/archive/main/42/MPW-21321",
+		'release_year': "1994",
+		'category': 'R',
 	},
 ]
 
